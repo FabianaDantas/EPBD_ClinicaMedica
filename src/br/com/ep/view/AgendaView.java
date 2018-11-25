@@ -31,6 +31,7 @@ import br.com.ep.modelo.Medico;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JComboBox;
+import javax.swing.ListSelectionModel;
 
 public class AgendaView extends JInternalFrame {
 
@@ -91,6 +92,7 @@ public class AgendaView extends JInternalFrame {
 		jPanel1 = new JPanel();
 		jScrollPane1 = new JScrollPane();
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		setClosable(true);
 		setMaximizable(false);
@@ -108,7 +110,7 @@ public class AgendaView extends JInternalFrame {
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE).addGap(4)));
+						.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, 183, Short.MAX_VALUE)));
 
 		table.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "ID_AGENDA", "DIA DA SEMANA", "HORA INICIO", "HORA FIM", "MEDICO" }) {
@@ -124,7 +126,7 @@ public class AgendaView extends JInternalFrame {
 				if (table.getSelectedRow() != -1) {
 					txtIDAgenda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
 					cbDiaDaSemana.setSelectedItem(table.getValueAt(table.getSelectedRow(), 1).toString());
-					txtHoraInicio.setText(table.getValueAt(table.getSelectedRow(), 2).toString().replace(":", ""));
+					txtHoraInicio.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
 					txtHoraFim.setText(table.getValueAt(table.getSelectedRow(), 3).toString().replace(":", ""));
 					cbMedico.setSelectedItem(table.getValueAt(table.getSelectedRow(), 4));
 					
@@ -145,9 +147,9 @@ public class AgendaView extends JInternalFrame {
 				if (table.getSelectedRow() != -1) {
 					txtIDAgenda.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
 					cbDiaDaSemana.setSelectedItem(table.getValueAt(table.getSelectedRow(), 1).toString());
-					txtHoraInicio.setText(table.getValueAt(table.getSelectedRow(), 2).toString().replace(":", ""));
+					txtHoraInicio.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
 					txtHoraFim.setText(table.getValueAt(table.getSelectedRow(), 3).toString().replace(":", ""));
-					cbMedico.getModel().setSelectedItem(table.getValueAt(table.getSelectedRow(), 4));
+					cbMedico.setSelectedItem(table.getValueAt(table.getSelectedRow(), 4));
 
 					txtIDAgenda.setEnabled(false);
 					cbDiaDaSemana.setEnabled(true);
@@ -300,10 +302,12 @@ public class AgendaView extends JInternalFrame {
 
 					Agenda a = new Agenda();
 
-					// d.setIdDoenca(Integer.parseInt(table.getValueAt(table.getSelectedRow(),
-					// 0).toString()));
-					// d.setNome(txtNomeDoenca.getText());
-					// dao.update(d);
+					a.setIdagenda(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+					a.setDiaDaSemana(cbDiaDaSemana.getSelectedItem().toString());
+					a.setHoraInicio(txtHoraInicio.getText());
+					a.setHoraFim(txtHoraFim.getText());
+					a.setMedico((Medico) cbMedico.getSelectedItem());
+					dao.update(a);
 					limparCampos();
 					readJTable();
 
